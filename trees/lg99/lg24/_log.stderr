@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/home/eecs/mattjones/.local/bin/reconstruct-lineage", line 10, in <module>
+    sys.exit(main())
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 198, in main
+    cm = pd.read_csv(char_fp, sep='\t', index_col=0, dtype=str)
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/pandas/io/parsers.py", line 702, in parser_f
+    return _read(filepath_or_buffer, kwds)
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/pandas/io/parsers.py", line 429, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/pandas/io/parsers.py", line 895, in __init__
+    self._make_engine(self.engine)
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/pandas/io/parsers.py", line 1122, in _make_engine
+    self._engine = CParserWrapper(self.f, **self.options)
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/pandas/io/parsers.py", line 1853, in __init__
+    self._reader = parsers.TextReader(src, **kwds)
+  File "pandas/_libs/parsers.pyx", line 387, in pandas._libs.parsers.TextReader.__cinit__
+  File "pandas/_libs/parsers.pyx", line 705, in pandas._libs.parsers.TextReader._setup_parser_source
+FileNotFoundError: [Errno 2] File b'lg24_character_matrix.txt' does not exist: b'lg24_character_matrix.txt'
+Traceback (most recent call last):
+  File "/home/eecs/mattjones/.local/bin/post-process-tree", line 10, in <module>
+    sys.exit(main())
+  File "/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/post_process_tree.py", line 240, in main
+    tree = pic.load(open(treefp, "rb"))
+FileNotFoundError: [Errno 2] No such file or directory: 'lg24_tree_nj_priors.pkl'

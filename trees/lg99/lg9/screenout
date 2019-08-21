@@ -1,0 +1,25 @@
+[2J[Hmix: can't find input file "infile"
+Please enter a new file name> 
+mix: the file "outfile" that you wanted to
+     use as output file already exists.
+     Do you want to Replace it, Append to it,
+     write to a new File, or Quit?
+     (please type R, A, F, or Q) 
+Please enter a new file name> 
+mix: the file "lg9_character_matrixoutfile.txt" that you wanted to
+     use as output file already exists.
+     Do you want to Replace it, Append to it,
+     write to a new File, or Quit?
+     (please type R, A, F, or Q) 
+     (please type R, A, F, or Q) 
+     (please type R, A, F, or Q) 
+Please enter a new file name> 
+mix: the file "lg9_character_matrixouttree.txt" that you wanted to
+     use as output file already exists.
+     Do you want to Replace it, Append to it,
+     write to a new File, or Quit?
+     (please type R, A, F, or Q) 
+
+
+ERROR: Unexpected end-of-file.
+

@@ -1,0 +1,7 @@
+lg7_character_matrixinfile.txt
+F
+lg7_character_matrixoutfile.txt
+P
+Y
+F
+lg7_character_matrixouttree.txt

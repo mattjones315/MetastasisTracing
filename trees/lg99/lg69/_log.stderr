@@ -1,0 +1,88 @@
+/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
+Compilation is falling back to object mode WITH looplifting enabled because Function "compute_distance_mat" failed type inference due to: Untyped global name 'tqdm': cannot determine Numba type of <class 'type'>
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
+def compute_distance_mat(cm, C, priors=None):
+    <source elided>
+    k = 0
+    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
+    ^
+
+  @jit(parallel=True)
+/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
+Compilation is falling back to object mode WITHOUT looplifting enabled because Function "compute_distance_mat" failed type inference due to: cannot determine Numba type of <class 'numba.dispatcher.LiftedLoop'>
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
+def compute_distance_mat(cm, C, priors=None):
+    <source elided>
+    k = 0
+    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
+    ^
+
+  @jit(parallel=True)
+/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:725: NumbaWarning: Function "compute_distance_mat" was compiled in object mode without forceobj=True, but has lifted loops.
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 100:
+@jit(parallel=True)
+def compute_distance_mat(cm, C, priors=None):
+^
+
+  self.func_ir.loc))
+/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:734: NumbaDeprecationWarning: 
+Fall-back from the nopython compilation path to the object mode compilation path has been detected, this is deprecated behaviour.
+
+For more information visit http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 100:
+@jit(parallel=True)
+def compute_distance_mat(cm, C, priors=None):
+^
+
+  warnings.warn(errors.NumbaDeprecationWarning(msg, self.func_ir.loc))
+/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
+Compilation is falling back to object mode WITHOUT looplifting enabled because Function "compute_distance_mat" failed type inference due to: Untyped global name 'tqdm': cannot determine Numba type of <class 'type'>
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
+def compute_distance_mat(cm, C, priors=None):
+    <source elided>
+    k = 0
+    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
+    ^
+
+  @jit(parallel=True)
+/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:725: NumbaWarning: Function "compute_distance_mat" was compiled in object mode without forceobj=True.
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
+def compute_distance_mat(cm, C, priors=None):
+    <source elided>
+    k = 0
+    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
+    ^
+
+  self.func_ir.loc))
+/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:734: NumbaDeprecationWarning: 
+Fall-back from the nopython compilation path to the object mode compilation path has been detected, this is deprecated behaviour.
+
+For more information visit http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
+def compute_distance_mat(cm, C, priors=None):
+    <source elided>
+    k = 0
+    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
+    ^
+
+  warnings.warn(errors.NumbaDeprecationWarning(msg, self.func_ir.loc))
+/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
+Compilation is falling back to object mode WITHOUT looplifting enabled because Function "compute_distance_mat" failed type inference due to: Untyped global name 'tqdm': cannot determine Numba type of <class 'type'>
+
+File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
+def compute_distance_mat(cm, C, priors=None):
+    <source elided>
+    k = 0
+    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
+    ^
+
+  @jit(parallel=True)
+solving distance matrix:   0%|          | 0/50 [00:00<?, ?it/s]solving distance matrix:  46%|████▌     | 23/50 [00:00<00:00, 228.87it/s]solving distance matrix: 100%|██████████| 50/50 [00:00<00:00, 383.48it/s]
+0it [00:00, ?it/s]100it [00:00, 21874.96it/s]

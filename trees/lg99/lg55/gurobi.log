@@ -1,0 +1,95 @@
+
+Gurobi 8.1.1 (linux64, Python) logging started Wed Jul 24 11:03:06 2019
+
+Academic license - for non-commercial use only
+Changed value of parameter MIPGap to 0.01
+   Prev: 0.0001  Min: 0.0  Max: 1e+100  Default: 0.0001
+Changed value of parameter Threads to 1
+   Prev: 0  Min: 0  Max: 1024  Default: 0
+Changed value of parameter Presolve to 2
+   Prev: -1  Min: -1  Max: 2  Default: -1
+Changed value of parameter MIPFocus to 1
+   Prev: 0  Min: 0  Max: 3  Default: 0
+Changed value of parameter Cuts to 1
+   Prev: -1  Min: -1  Max: 3  Default: -1
+Changed value of parameter Method to 4
+   Prev: -1  Min: -1  Max: 5  Default: -1
+Changed value of parameter TimeLimit to 12600.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 1611 rows, 2804 columns and 5608 nonzeros
+Variable types: 0 continuous, 2804 integer (1402 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [1e+00, 1e+01]
+  Bounds range     [1e+00, 6e+01]
+  RHS range        [1e+00, 6e+01]
+Found heuristic solution: objective 244.0000000
+Presolve removed 658 rows and 669 columns
+Presolve time: 0.03s
+Presolved: 953 rows, 2135 columns, 4284 nonzeros
+Variable types: 0 continuous, 2135 integer (1301 binary)
+Presolve removed 742 rows and 743 columns
+Presolved: 211 rows, 1392 columns, 2795 nonzeros
+
+
+Root relaxation: objective 1.024384e+02, 141 iterations, 0.13 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  102.43845    0   57  244.00000  102.43845  58.0%     -    0s
+H    0     0                     165.0000000  102.43845  37.9%     -    0s
+     0     0  124.18400    0  117  165.00000  124.18400  24.7%     -    0s
+H    0     0                     151.0000000  124.18400  17.8%     -    0s
+     0     0  125.05922    0  114  151.00000  125.05922  17.2%     -    0s
+     0     0  125.16179    0  105  151.00000  125.16179  17.1%     -    0s
+     0     0  125.16179    0  107  151.00000  125.16179  17.1%     -    0s
+     0     0  132.40718    0  167  151.00000  132.40718  12.3%     -    0s
+H    0     0                     145.0000000  132.40718  8.68%     -    0s
+     0     0  134.47080    0  172  145.00000  134.47080  7.26%     -    0s
+     0     0  134.53676    0  162  145.00000  134.53676  7.22%     -    0s
+     0     0  134.56723    0  183  145.00000  134.56723  7.20%     -    0s
+     0     0  134.58732    0  183  145.00000  134.58732  7.18%     -    0s
+     0     0  134.59054    0  185  145.00000  134.59054  7.18%     -    0s
+     0     0  136.58552    0  218  145.00000  136.58552  5.80%     -    0s
+H    0     0                     141.0000000  136.58552  3.13%     -    0s
+     0     0  137.70166    0  151  141.00000  137.70166  2.34%     -    0s
+     0     0  137.87668    0  136  141.00000  137.87668  2.22%     -    0s
+     0     0  137.89289    0  138  141.00000  137.89289  2.20%     -    0s
+     0     0  137.90277    0  139  141.00000  137.90277  2.20%     -    0s
+     0     0  137.90277    0  139  141.00000  137.90277  2.20%     -    0s
+     0     0  138.48415    0  131  141.00000  138.48415  1.78%     -    0s
+     0     0  138.73677    0  173  141.00000  138.73677  1.61%     -    0s
+     0     0  138.88778    0  166  141.00000  138.88778  1.50%     -    0s
+     0     0  138.89453    0  171  141.00000  138.89453  1.49%     -    0s
+     0     0  138.89536    0  177  141.00000  138.89536  1.49%     -    0s
+     0     0  139.26959    0  102  141.00000  139.26959  1.23%     -    0s
+
+Cutting planes:
+  Gomory: 28
+  Cover: 50
+  Implied bound: 16
+  Clique: 1
+  MIR: 61
+  StrongCG: 6
+  Flow cover: 101
+  Zero half: 7
+  Network: 12
+
+Explored 1 nodes (1176 simplex iterations) in 0.47 seconds
+Thread count was 1 (of 40 available processors)
+
+Solution count 5: 141 145 151 ... 244
+
+Optimal solution found (tolerance 1.00e-02)
+Best objective 1.410000000000e+02, best bound 1.400000000000e+02, gap 0.7092%
+Parameter SolutionNumber unchanged
+   Value: 0  Min: 0  Max: 2000000000  Default: 0
+Changed value of parameter SolutionNumber to 1
+   Prev: 0  Min: 0  Max: 2000000000  Default: 0
+Changed value of parameter SolutionNumber to 2
+   Prev: 1  Min: 0  Max: 2000000000  Default: 0
+Changed value of parameter SolutionNumber to 3
+   Prev: 2  Min: 0  Max: 2000000000  Default: 0
+Changed value of parameter SolutionNumber to 4
+   Prev: 3  Min: 0  Max: 2000000000  Default: 0
