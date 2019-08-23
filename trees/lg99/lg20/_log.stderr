@@ -1,88 +1,0 @@
-/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
-Compilation is falling back to object mode WITH looplifting enabled because Function "compute_distance_mat" failed type inference due to: Untyped global name 'tqdm': cannot determine Numba type of <class 'type'>
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
-def compute_distance_mat(cm, C, priors=None):
-    <source elided>
-    k = 0
-    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
-    ^
-
-  @jit(parallel=True)
-/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
-Compilation is falling back to object mode WITHOUT looplifting enabled because Function "compute_distance_mat" failed type inference due to: cannot determine Numba type of <class 'numba.dispatcher.LiftedLoop'>
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
-def compute_distance_mat(cm, C, priors=None):
-    <source elided>
-    k = 0
-    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
-    ^
-
-  @jit(parallel=True)
-/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:725: NumbaWarning: Function "compute_distance_mat" was compiled in object mode without forceobj=True, but has lifted loops.
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 100:
-@jit(parallel=True)
-def compute_distance_mat(cm, C, priors=None):
-^
-
-  self.func_ir.loc))
-/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:734: NumbaDeprecationWarning: 
-Fall-back from the nopython compilation path to the object mode compilation path has been detected, this is deprecated behaviour.
-
-For more information visit http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 100:
-@jit(parallel=True)
-def compute_distance_mat(cm, C, priors=None):
-^
-
-  warnings.warn(errors.NumbaDeprecationWarning(msg, self.func_ir.loc))
-/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
-Compilation is falling back to object mode WITHOUT looplifting enabled because Function "compute_distance_mat" failed type inference due to: Untyped global name 'tqdm': cannot determine Numba type of <class 'type'>
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
-def compute_distance_mat(cm, C, priors=None):
-    <source elided>
-    k = 0
-    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
-    ^
-
-  @jit(parallel=True)
-/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:725: NumbaWarning: Function "compute_distance_mat" was compiled in object mode without forceobj=True.
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
-def compute_distance_mat(cm, C, priors=None):
-    <source elided>
-    k = 0
-    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
-    ^
-
-  self.func_ir.loc))
-/home/eecs/mattjones/anaconda3/envs/py36/lib/python3.6/site-packages/numba/compiler.py:734: NumbaDeprecationWarning: 
-Fall-back from the nopython compilation path to the object mode compilation path has been detected, this is deprecated behaviour.
-
-For more information visit http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
-def compute_distance_mat(cm, C, priors=None):
-    <source elided>
-    k = 0
-    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
-    ^
-
-  warnings.warn(errors.NumbaDeprecationWarning(msg, self.func_ir.loc))
-/home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py:99: NumbaWarning: 
-Compilation is falling back to object mode WITHOUT looplifting enabled because Function "compute_distance_mat" failed type inference due to: Untyped global name 'tqdm': cannot determine Numba type of <class 'type'>
-
-File "../../../../../../../../../home/eecs/mattjones/.local/lib/python3.6/site-packages/Cassiopeia/TreeSolver/reconstruct_tree.py", line 104:
-def compute_distance_mat(cm, C, priors=None):
-    <source elided>
-    k = 0
-    for i in tqdm(range(C-1), desc = 'solving distance matrix'):
-    ^
-
-  @jit(parallel=True)
-solving distance matrix:   0%|          | 0/278 [00:00<?, ?it/s]solving distance matrix:   1%|          | 3/278 [00:00<00:13, 19.78it/s]solving distance matrix:   2%|▏         | 5/278 [00:00<00:13, 19.81it/s]solving distance matrix:   3%|▎         | 8/278 [00:00<00:12, 20.95it/s]solving distance matrix:   5%|▍         | 13/278 [00:00<00:10, 24.60it/s]solving distance matrix:   6%|▋         | 18/278 [00:00<00:09, 28.64it/s]solving distance matrix:   8%|▊         | 23/278 [00:00<00:07, 32.46it/s]solving distance matrix:  10%|█         | 29/278 [00:00<00:06, 36.66it/s]solving distance matrix:  13%|█▎        | 35/278 [00:00<00:06, 40.12it/s]solving distance matrix:  14%|█▍        | 40/278 [00:01<00:05, 42.53it/s]solving distance matrix:  17%|█▋        | 46/278 [00:01<00:05, 44.80it/s]solving distance matrix:  18%|█▊        | 51/278 [00:01<00:04, 46.14it/s]solving distance matrix:  21%|██        | 57/278 [00:01<00:04, 48.58it/s]solving distance matrix:  23%|██▎       | 63/278 [00:01<00:04, 50.16it/s]solving distance matrix:  25%|██▍       | 69/278 [00:01<00:04, 50.87it/s]solving distance matrix:  27%|██▋       | 75/278 [00:01<00:03, 53.29it/s]solving distance matrix:  29%|██▉       | 82/278 [00:01<00:03, 55.97it/s]solving distance matrix:  32%|███▏      | 89/278 [00:01<00:03, 57.53it/s]solving distance matrix:  35%|███▍      | 96/278 [00:02<00:03, 59.77it/s]solving distance matrix:  37%|███▋      | 103/278 [00:02<00:02, 62.15it/s]solving distance matrix:  40%|███▉      | 110/278 [00:02<00:02, 63.35it/s]solving distance matrix:  42%|████▏     | 118/278 [00:02<00:02, 66.92it/s]solving distance matrix:  45%|████▌     | 126/278 [00:02<00:02, 70.30it/s]solving distance matrix:  48%|████▊     | 134/278 [00:02<00:01, 72.57it/s]solving distance matrix:  52%|█████▏    | 144/278 [00:02<00:01, 77.51it/s]solving distance matrix:  55%|█████▌    | 154/278 [00:02<00:01, 82.26it/s]solving distance matrix:  60%|█████▉    | 166/278 [00:02<00:01, 89.15it/s]solving distance matrix:  64%|██████▎   | 177/278 [00:02<00:01, 93.98it/s]solving distance matrix:  68%|██████▊   | 190/278 [00:03<00:00, 101.57it/s]solving distance matrix:  73%|███████▎  | 204/278 [00:03<00:00, 108.94it/s]solving distance matrix:  79%|███████▉  | 220/278 [00:03<00:00, 120.26it/s]solving distance matrix:  87%|████████▋ | 242/278 [00:03<00:00, 138.53it/s]solving distance matrix: 100%|██████████| 278/278 [00:03<00:00, 80.76it/s] 
-0it [00:00, ?it/s]556it [00:00, 28840.38it/s]

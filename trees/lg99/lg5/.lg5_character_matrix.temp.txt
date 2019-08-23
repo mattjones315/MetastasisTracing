@@ -1,7 +1,0 @@
-lg5_character_matrixinfile.txt
-F
-lg5_character_matrixoutfile.txt
-P
-Y
-F
-lg5_character_matrixouttree.txt

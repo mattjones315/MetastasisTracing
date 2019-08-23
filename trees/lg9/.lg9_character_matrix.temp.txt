@@ -1,6 +1,0 @@
-lg9_character_matrixouttree.txt
-F
-lg9_character_matrixconenseoutfile.txt
-Y
-F
-lg9_character_matrixconsenseouttree.txt

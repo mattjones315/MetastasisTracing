@@ -11,4 +11,4 @@ Perhaps most useful in the ``utilities`` directory are:
 Each notebook corresponds to a module in our analysis:
 
 	* ``Metastasis_Simulator.ipynb``: simulate metastasis over various tissues and extract out tissue distributions and observed metastatic events.
-	* ``Score_Metastasis.ipynb``: filter out clones & score metastatic ability.
+	* ``Score_Metastasis.ipynb``: filter out clones & score metastatic ability.  

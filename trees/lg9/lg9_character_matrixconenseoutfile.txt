@@ -1,5 +1,0 @@
-
-Consensus tree program, version 3.697
-
-Species in order: 
-
