@@ -20,6 +20,7 @@ def scale_counts(T):
     col_counts = T.sum(axis=0)
     
     scale_fact = col_counts[0] / col_counts[1]
+    print(scale_fact)
     
     T["LG"] *= scale_fact
     
@@ -48,7 +49,7 @@ def cramers_v(stat, N, k, r):
 
     v = np.sqrt( phi2corr / min( (kcorr - 1), (rcorr - 1) ))
         
-    return v 
+    return 1 - v 
 
 def compute_static_metastasis_score(meta_lg, background, group_var = 'sampleID'):
     """
