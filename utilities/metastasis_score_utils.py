@@ -1,5 +1,8 @@
 import numpy as np
+import pandas as pd
 from . import fitch_parsimony
+import scipy.stats as scs
+
 
 def compute_tree_complexity(tree):
     
@@ -47,7 +50,7 @@ def cramers_v(stat, N, k, r):
         
     return v 
 
-def compute_static_metastasis_score(meta_lg, group_var = 'sampleID'):
+def compute_static_metastasis_score(meta_lg, background, group_var = 'sampleID'):
     """
     Comptues the static metastatic score using the Cramer's V statistic. 
 

@@ -22,8 +22,10 @@ def fitch_bottom_up(tree, root):
                 tree.nodes[i]["label"] = tree.nodes[children[0]]["label"]
                 continue
             if len(children) == 0:
+                if 'label' not in tree.nodes[i].keys():
+                    raise Exception("This should have a label!")
                 continue
-                    
+            
             _intersect = reduce(np.intersect1d, [tree.nodes[c]["label"] for c in children])
             if len(_intersect) > 0:
                 tree.nodes[i]["label"] = _intersect
@@ -77,8 +79,8 @@ def assign_labels(tree, labels):
     
     _leaves = [n for n in tree if tree.out_degree(n) == 0]
     for l in _leaves:
-        tree.nodes[l]["label"] = [labels[l]]
-    
+        tree.nodes[l]["label"] = [labels.loc[l.name]]
+        
     return tree
 
 
