@@ -12,8 +12,8 @@ import scipy.stats as st
 import pickle as pic 
 import networkx as nx 
 
-from Cassiopeia.TreeSolver.Node import Node
-from Cassiopeia.TreeSolver.Cassiopeia_Tree import Cassiopeia_Tree
+from cassiopeia.TreeSolver.Node import Node
+from cassiopeia.TreeSolver.Cassiopeia_Tree import Cassiopeia_Tree
 
 
 from tqdm import tqdm
@@ -34,7 +34,40 @@ def assign_edge_lengths(tree):
 		
 	return tree
 
-def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None):
+def find_phy_neighbors(g, query, K=1, dist_mat = None):
+
+	if dist_mat is not None:
+
+		idx = dist_mat.loc[query].idxmax()
+
+		neighbor, phydist = idx, dist_mat.loc[query, idx]
+
+	else:
+		root = [n for n in g if g.in_degree(n) == 0][0]
+		DIST_TO_ROOT = nx.single_source_dijkstra_path_length(g, root, weight='length')
+
+		_leaves = [n for n in g if g.out_degree(n) == 0]
+
+		pairs = [(query, l) for l in _leaves if l != query]
+		lcas = nx.algorithms.lowest_common_ancestors.all_pairs_lowest_common_ancestor(g, pairs=pairs)
+	 	
+		min_dist, neighbor = np.inf, None
+		for _lca in lcas:
+			
+			n_pair, mrca = _lca[0], _lca[1]
+			
+			dA = DIST_TO_ROOT[n_pair[0]]
+			dB = DIST_TO_ROOT[n_pair[1]]
+			dC = DIST_TO_ROOT[mrca]
+			
+			phydist = dA + dB - 2*dC 
+			if phydist < min_dist:
+				neighbor = n_pair[1]
+
+	return neighbor, phydist
+
+
+def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=None, verbose = True):
 
 	tree_dist = []
 	edit_dist = []
@@ -43,9 +76,13 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None):
 	
 	DIST_TO_ROOT = nx.single_source_dijkstra_path_length(g, root, weight='length')
 
-	_leaves = [n for n in g if g.out_degree(n) == 0]
+	if subset:
+		_leaves = subset
+	else:
+		_leaves = [n for n in g if g.out_degree(n) == 0]
 	
 	all_pairs = []
+	pair_names = []
 	for i1 in tqdm(range(len(_leaves)), desc = "Creating pairs to compare"):
 		l1 = _leaves[i1]
 		for i2 in range(i1+1, len(_leaves)):
@@ -54,17 +91,22 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None):
 			if compare_method == 'inter':
 				if meta_item.loc[l1.name] != meta_item.loc[l2.name]:
 					all_pairs.append((l1, l2))
+					pair_names.append((l1.name, l2.name))
 			elif compare_method == "intra":
 				if meta_item.loc[l1.name] == meta_item.loc[l2.name]:
 					all_pairs.append((l1, l2))
+					pair_names.append((l1.name, l2.name))
 
 			else:
 				all_pairs.append((l1, l2))
+				pair_names.append((l1.name, l2.name))
 
-	print("Finding LCAs for all pairs...")
+	if verbose:
+		print("Finding LCAs for all pairs...")
 	lcas = nx.algorithms.lowest_common_ancestors.all_pairs_lowest_common_ancestor(g, pairs=all_pairs)
 
-	print("Computing pairwise distances...")
+	if verbose:
+		print("Computing pairwise distances...")
 	for _lca in lcas:
 		
 		n_pair, mrca = _lca[0], _lca[1]
@@ -80,7 +122,7 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None):
 	diam = np.max(tree_dist)
 	tree_dist /= diam
 	
-	return np.array(tree_dist), np.array(edit_dist)
+	return np.array(tree_dist), np.array(edit_dist), pair_names
 
 def compute_RNA_corr(counts, cells, _method = "euclidean"):
 	
@@ -131,26 +173,30 @@ if __name__ == "__main__":
 	root = [n for n in tree if tree.in_degree(n) == 0][0]
 	_leaves = [n for n in tree if tree.out_degree(n) == 0]
 
+	subset = None
 	if meta_fp:
 		meta = pd.read_csv(meta_fp, sep='\t', index_col = 0)
+
+	if expr_fp:
+		expr = pd.read_csv(expr_fp, sep='\t', index_col = 0)
+		subset = [l for l in _leaves if l.name in expr.index.values]
 
 	tree = assign_edge_lengths(tree)
 
 	if args.intra_meta:
-		tree_dists, edit_dists = compute_pairwise_dist_nx(tree, compare_method = "intra", meta_item = meta[meta_col])
+		tree_dists, edit_dists, pairs = compute_pairwise_dist_nx(tree, compare_method = "intra", meta_item = meta[meta_col], subset = subset)
 
 	elif args.inter_meta:
-		tree_dists, edit_dists = compute_pairwise_dist_nx(tree, compare_method = "inter", meta_item = meta[meta_col])
+		tree_dists, edit_dists, pairs = compute_pairwise_dist_nx(tree, compare_method = "inter", meta_item = meta[meta_col], subset = subset)
 
 	else:
-		tree_dists, edit_dists = compute_pairwise_dist_nx(tree)
+		tree_dists, edit_dists, pairs = compute_pairwise_dist_nx(tree, subset=subset)
 
 
 	rna_dists = None
 	if expr_fp:
 		
-		expr = pd.read_csv(expr_fp, sep='\t', index_col = 0)
-		rna_dists = compute_RNA_corr(expr, [n.name for n in _leaves], _method=_method)
+		rna_dists = compute_RNA_corr(expr, [n.name for n in subset], _method=_method)
 
 	if out_fp:
 
