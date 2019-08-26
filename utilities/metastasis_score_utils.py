@@ -116,7 +116,7 @@ def compute_NN_metastasis_score(tree, meta, K=1, _method = 'tree', verbose = Tru
     for l in _leaves:
         neigh, dist = tree_val.find_phy_neighbors(tree, l, dist_mat = dmat)
 
-        if tree.nodes[neigh]['label'] == tree.nodes[l]['label']:
+        if tree.nodes[neigh]['label'] != tree.nodes[l]['label']:
             nn_score += 1
 
     return nn_score / len(_leaves)
