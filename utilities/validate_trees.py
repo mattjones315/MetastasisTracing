@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt 
 
-import scanpy.api as sc
+import scanpy as sc
 import scipy as sp
 import scipy.io as spio
 
@@ -24,7 +24,24 @@ import numba
 import argparse
 
 import seaborn as sns
+import colorcet as cc
 
+def dist_plotter(tree_dists, edit_dists, plot_type, diam, n_targets, out_fp=None):
+    
+    plt.figure(1,figsize=(6,6))
+    if plot_type=='2D-Density': 
+        kde = sns.kdeplot(tree_dists,edit_dists, cmap=cc.cm.CET_L19, shade=True, bw=.02, n_levels=50)
+    elif plot_type=='2D-Hist': 
+        hist = plt.hist2d(tree_dists,edit_dists, bins=[diam-1,n_targets], cmap=cc.cm.CET_L19)
+    elif plot_type =='Scatter': 
+        scat = plt.scatter(tree_dists,edit_dists, c='r', marker='.', alpha=0.01)
+    xlab = plt.xlabel("Phylogenetic Distance")
+    ylab = plt.ylabel("Allele Distance")
+    ylim = plt.ylim(0,1)
+    xlim = plt.xlim(0,1)
+
+    if out_fp is not None:
+    	plt.savefig(out_fp)
 
 def assign_edge_lengths(tree):
 	
@@ -75,6 +92,7 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=
 	root = [n for n in g if g.in_degree(n) == 0][0]
 	
 	DIST_TO_ROOT = nx.single_source_dijkstra_path_length(g, root, weight='length')
+	n_targets = len([n for n in g][0].get_character_vec())
 
 	if subset:
 		_leaves = subset
@@ -122,7 +140,7 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=
 	diam = np.max(tree_dist)
 	tree_dist /= diam
 	
-	return np.array(tree_dist), np.array(edit_dist), pair_names
+	return np.array(tree_dist), np.array(edit_dist), pair_names, diam, n_targets
 
 def compute_RNA_corr(counts, cells, _method = "euclidean"):
 	
