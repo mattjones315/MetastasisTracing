@@ -20,13 +20,46 @@ import multiprocessing
 import concurrent.futures
 
 from . import sankoff_parsimony
+from . import fitch_parsimony
+
+def compute_transitions(t, meta):
+
+	root = [n for n in t if t.in_degree(n) == 0][0]
+	t = assign_labels(t, meta)
+	possible_labels = meta.unique()
+
+	t = cmp.set_depth(t, root)
+	t = fitch_parsimony.fitch_bottom_up(t, root)
+
+	bfs_postorder = [root]
+	for e0, e1 in nx.bfs_edges(t, root):
+		bfs_postorder.append(e1)
+
+	node_to_i = dict(zip(bfs_postorder, range(len(t.nodes))))
+	label_to_j = dict(zip(possible_labels, range(len(possible_labels))))
+
+	t = fitch_parsimony.reconcile_fitch(t)
+
+	L = fitch_parsimony.count_opt_solutions(t, possible_labels, node_to_i, label_to_j)
+
+	C = fitch_parsimony.count_num_transitions(t, L, possible_labels, node_to_i, label_to_j)
+
+	count_mat = pd.DataFrame(np.zeros((L.shape[1], L.shape[1])))
+	count_mat.columns = possible_labels
+	count_mat.index = possible_labels 
+
+	# count_mat: transitions are rows -> columns
+	for s1 in possible_labels:
+		for s2 in possible_labels:
+			count_mat.loc[s1, s2] = np.sum(C[node_to_i[root], :, label_to_j[s1], label_to_j[s2]])
+
+	return count_mat
 
 def assign_labels(tree, labels):
 	
 	_leaves = [n for n in tree if tree.out_degree(n) == 0]
 	for l in _leaves:
-		tree.nodes[l]["label"] = [labels[l.name]][0]
-	
+		tree.nodes[l]["label"] = [labels[l.name]]
 	return tree
 
 

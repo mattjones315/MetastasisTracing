@@ -5,6 +5,103 @@ import numpy as np
 from functools import reduce
 
 import cassiopeia.TreeSolver.compute_meta_purity as cmp
+from networkx.algorithms.traversal.depth_first_search import dfs_tree
+
+def reconcile_fitch(T):
+    
+    source = [n for n in T if T.in_degree(n) == 0][0]
+    for e in nx.dfs_edges(T):
+        
+        p, c = e[0], e[1]
+        ns = np.intersect1d(T.nodes[p]['label'], T.nodes[c]['label'])
+        if len(ns) > 0:
+            T.nodes[c]['label'] = ns
+
+    return T
+
+def count_opt_solutions(T, possible_assignments, node_to_i, label_to_j):
+    
+    def fill_DP(v, s):
+
+        if T.out_degree(v) == 0:
+            return 1
+        
+        children = list(T.successors(v))
+        A = np.zeros((len(children)))
+        
+        for i, u in zip(range(len(children)), children):
+            if s not in T.nodes[u]['label']:
+                A[i] = 0
+                for sp in T.nodes[u]['label']:
+                    if L[node_to_i[u], label_to_j[sp]] == 0:
+                        L[node_to_i[u], label_to_j[sp]] = fill_DP(u, sp)
+                    A[i] += L[node_to_i[u], label_to_j[sp]]
+            else:
+                if L[node_to_i[u], label_to_j[s]] == 0:
+                    L[node_to_i[u], label_to_j[s]] = fill_DP(u, s)
+                A[i] = L[node_to_i[u], label_to_j[s]]
+                
+        return np.prod([A[u] for u in range(len(A))])
+    
+    L = np.full((len(T.nodes), len(possible_assignments)), 0.0)
+    
+    root = [n for n in T if T.in_degree(n) == 0][0]
+    
+    for s in T.nodes[root]['label']:
+        L[node_to_i[root], label_to_j[s]] = fill_DP(root, s)
+        
+    return L
+
+def count_num_transitions(T, L, possible_labels, node_to_i, label_to_j):
+    
+    def fill_transition_DP(v, s, s1, s2):
+        
+        if T.out_degree(v) == 0:
+            return 0
+        
+        children = list(T.successors(v))
+        A = np.zeros((len(children)))
+        LS = [[]] * len(children)
+        
+        for i, u in zip(range(len(children)), children):
+            LS_u = None
+            if s in T.nodes[u]['label']:
+                LS[i] = [s]
+            else:
+                LS[i] = T.nodes[u]['label']
+            
+            A[i] = 0
+            for sp in LS[i]:
+                if C[node_to_i[u], label_to_j[sp], label_to_j[s1], label_to_j[s2]] == 0:
+                    C[node_to_i[u], label_to_j[sp], label_to_j[s1], label_to_j[s2]] = fill_transition_DP(u, sp, s1, s2)
+                A[i] += C[node_to_i[u], label_to_j[sp], label_to_j[s1], label_to_j[s2]]
+            
+            if (s1 == s and s2 in LS[i]):
+                A[i] += L[node_to_i[u], label_to_j[s2]]
+        
+        parts = []
+        for i, u in zip(range(len(children)), children):
+            prod = 1
+            
+            for k, up in zip(range(len(children)), children):
+                if up == u:
+                    continue
+                for sp in LS[k]:
+                    prod *= L[node_to_i[up], label_to_j[sp]]
+                
+            part = A[i] * prod
+            parts.append(part)
+        return np.sum(parts)
+    
+    C = np.zeros((len(T.nodes), L.shape[1], L.shape[1], L.shape[1]))
+    root = [n for n in T if T.in_degree(n) == 0][0]
+    for s in T.nodes[root]['label']:
+        for s1 in possible_labels:
+            for s2 in possible_labels:
+                if s1 == s2:
+                    continue
+                C[node_to_i[root], label_to_j[s], label_to_j[s1], label_to_j[s2]] = fill_transition_DP(root, s, s1, s2)
+    return C
 
 def fitch_bottom_up(tree, root):
     
@@ -35,7 +132,7 @@ def fitch_bottom_up(tree, root):
         d -= 1 
     
     return tree
-    
+
 def fitch_top_down(tree, root):
     
     md = cmp.get_max_depth(tree, root)

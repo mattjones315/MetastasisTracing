@@ -70,6 +70,39 @@ def sankoff(tree, possible_labels = ["LL", "RE", "RW", "M1", "M2", "Liv"]):
             
     return C
 
+def compute_q_sankoff(tree, factor, C, S = []):
+    
+    # index matrix C
+    master_root = [n for n in tree if tree.in_degree(n) == 0][0]
+    
+    bfs_postorder = [master_root]
+    for e0, e1 in nx.bfs_edges(tree, master_root):
+        bfs_postorder.append(e1)
+    
+    node_to_i = dict(zip(bfs_postorder, range(len(tree.nodes))))
+    label_to_j = dict(zip(S, range(len(S))))
+
+    root = factor[0]
+    children = factor[1]
+
+    _t = np.zeros((len(S), len(S)))
+
+    pars = np.amin(C[node_to_i[root],:])
+    possible_labels = np.where(C[node_to_i[root], :] == pars)[0]
+
+    for j in possible_labels:
+        
+        for c in children:
+
+            c_i = node_to_i[c]
+            value_arr = [SANKOFF_SIGMA(j, sp) + C[c_i, sp] for sp in range(C.shape[1])]
+            m = np.amin(value_arr)
+            _c_assignments = np.where(value_arr == m)[0]
+            for k in _c_assignments:
+                if j != k:
+                    _t[j, k] += 1
+
+    return _t
 
 def sample_sankoff_path(tree, C, possible_labels=["LL", "RE", "RW", "M1", "M2", "Liv"]):
     
