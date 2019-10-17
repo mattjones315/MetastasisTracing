@@ -3,6 +3,7 @@ import networkx as nx
 import pandas as pd 
 import numpy as np
 from functools import reduce
+import itertools
 
 import cassiopeia.TreeSolver.compute_meta_purity as cmp
 from networkx.algorithms.traversal.depth_first_search import dfs_tree
@@ -13,11 +14,14 @@ def reconcile_fitch(T):
     for e in nx.dfs_edges(T):
         
         p, c = e[0], e[1]
-        ns = np.intersect1d(T.nodes[p]['label'], T.nodes[c]['label'])
-        if len(ns) > 0:
-            T.nodes[c]['label'] = ns
-
+        ns = np.intersect1d(T.nodes[p]['label'], T.nodes[c]['label']).tolist()
+        
+        if len(ns) > 0 and len(ns) == len(T.nodes[p]['label']):
+            T.nodes[c]['label'] = ns 
+        else:
+            T.nodes[c]['label'] = list(T.nodes[c]['label'])
     return T
+
 
 def count_opt_solutions(T, possible_assignments, node_to_i, label_to_j):
     
@@ -72,37 +76,41 @@ def count_num_transitions(T, L, possible_labels, node_to_i, label_to_j):
             
             A[i] = 0
             for sp in LS[i]:
-                if C[node_to_i[u], label_to_j[sp], label_to_j[s1], label_to_j[s2]] == 0:
-                    C[node_to_i[u], label_to_j[sp], label_to_j[s1], label_to_j[s2]] = fill_transition_DP(u, sp, s1, s2)
                 A[i] += C[node_to_i[u], label_to_j[sp], label_to_j[s1], label_to_j[s2]]
             
             if (s1 == s and s2 in LS[i]):
                 A[i] += L[node_to_i[u], label_to_j[s2]]
-        
+            
+
         parts = []
         for i, u in zip(range(len(children)), children):
             prod = 1
             
             for k, up in zip(range(len(children)), children):
+                fact = 0
                 if up == u:
                     continue
                 for sp in LS[k]:
-                    prod *= L[node_to_i[up], label_to_j[sp]]
+                    fact += L[node_to_i[up], label_to_j[sp]]
+                
+                prod *= fact 
                 
             part = A[i] * prod
             parts.append(part)
+
         return np.sum(parts)
     
     C = np.zeros((len(T.nodes), L.shape[1], L.shape[1], L.shape[1]))
     root = [n for n in T if T.in_degree(n) == 0][0]
-    for s in T.nodes[root]['label']:
-        for s1 in possible_labels:
-            for s2 in possible_labels:
-                if s1 == s2:
-                    continue
-                C[node_to_i[root], label_to_j[s], label_to_j[s1], label_to_j[s2]] = fill_transition_DP(root, s, s1, s2)
-    return C
 
+    for n in nx.dfs_postorder_nodes(T, source=root):
+        for s in T.nodes[n]['label']:
+            for s_pair in itertools.product(possible_labels, repeat=2):
+                s1, s2 = s_pair[0], s_pair[1]
+                C[node_to_i[n], label_to_j[s], label_to_j[s1], label_to_j[s2]] = fill_transition_DP(n, s, s1, s2)
+                
+    return C
+    
 def fitch_bottom_up(tree, root):
     
     md = cmp.get_max_depth(tree, root)

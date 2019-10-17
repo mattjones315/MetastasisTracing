@@ -94,10 +94,11 @@ def compute_NN_metastasis_score(tree, meta, K=1, _method = 'tree', verbose = Tru
     tree = fitch_parsimony.assign_labels(tree, meta)
     _leaves = [n for n in tree if tree.out_degree(n) == 0]
 
-    tree_dists, edit_dists, pairs = tree_val.compute_pairwise_dist_nx(tree, verbose=verbose)
-
     dmat = None
     if _method == 'tree':
+
+        tree_dists, edit_dists, pairs, diam, n_targets = tree_val.compute_pairwise_dist_nx(tree, verbose=verbose)
+
         tree_dists = pd.DataFrame(sp.spatial.distance.squareform(tree_dists))
         tree_dists.index = [l for l in _leaves]
         tree_dists.columns = [l for l in _leaves]
@@ -105,19 +106,27 @@ def compute_NN_metastasis_score(tree, meta, K=1, _method = 'tree', verbose = Tru
         dmat = tree_dists
 
     if _method == 'allele':
+
+        edit_dists, pairs = tree_val.compute_pairwise_edit_dists(tree, verbose=verbose)
+
         edit_dists = pd.DataFrame(sp.spatial.distance.squareform(edit_dists))
         edit_dists.index = [l for l in _leaves]
         edit_dists.columns = [l for l in _leaves]
 
         dmat = edit_dists
 
+    np.fill_diagonal(dmat.values, 1e6)
 
     nn_score = 0
     for l in _leaves:
-        neigh, dist = tree_val.find_phy_neighbors(tree, l, dist_mat = dmat)
+        neighbors, dist = tree_val.find_phy_neighbors(tree, l, dist_mat = dmat)
 
-        if tree.nodes[neigh]['label'] != tree.nodes[l]['label']:
-            nn_score += 1
+        score = 0.0
+        for neigh in neighbors:
+            if tree.nodes[neigh]['label'] != tree.nodes[l]['label']:
+                score += 1
+                
+        nn_score += (score / len(neighbors))
 
     return nn_score / len(_leaves)
 

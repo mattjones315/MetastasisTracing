@@ -19,6 +19,8 @@ import traceback
 import multiprocessing
 import concurrent.futures
 
+import itertools
+
 from . import sankoff_parsimony
 from . import fitch_parsimony
 
@@ -190,7 +192,7 @@ def shuffle_labels(meta):
 	meta.index = inds
 	return meta
 
-def generate_background(lg, meta, num_threads = 1, num_shuffles = 100, num_iterations=1000):
+def generate_background(lg, meta, num_threads = 1, num_shuffles = 100):
 
 	rmeta = meta.copy()
 
@@ -203,19 +205,21 @@ def generate_background(lg, meta, num_threads = 1, num_shuffles = 100, num_itera
 
 	results = []
 
-	futures = [executor.submit(compute_transition_matrix, lg, rand_meta, num_iterations, None, None, False, False) for rand_meta in random_metas]
+	futures = [executor.submit(compute_transitions, lg, rand_meta) for rand_meta in random_metas]
 	# concurrent.futures.wait(futures)
    
 	for future in tqdm(concurrent.futures.as_completed(futures), total = len(futures)):
 		results.append(future)
 
 	for future in results:
-		rtransition_matrix, se_mat = future.result()
-		bg_mat += rtransition_matrix * (1.0 / num_shuffles)
+		rtransition_matrix = future.result()
+		bg_mat += rtransition_matrix
+
+	# normalize to number of shuffles
+	bg_mat /= num_shuffles
 
 	labels = bg_mat.columns
 	bg_mat = bg_mat.values
-	np.fill_diagonal(bg_mat, np.nan)
 
 	bg_mat = pd.DataFrame(bg_mat, index=labels, columns=labels)
 

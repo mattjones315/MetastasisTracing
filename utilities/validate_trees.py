@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt 
 
-import scanpy as sc
 import scipy as sp
 import scipy.io as spio
 
@@ -46,7 +45,7 @@ def dist_plotter(tree_dists, edit_dists, plot_type, diam, n_targets, out_fp=None
 def assign_edge_lengths(tree):
 	
 	for e in tqdm(tree.edges(), desc="assigning edge lengths"):
-		
+
 		tree[e[0]][e[1]]['length'] = e[0].get_mut_length(e[1])
 		
 	return tree
@@ -55,9 +54,9 @@ def find_phy_neighbors(g, query, K=1, dist_mat = None):
 
 	if dist_mat is not None:
 
-		idx = dist_mat.loc[query].idxmax()
-
-		neighbor, phydist = idx, dist_mat.loc[query, idx]
+		phydist = dist_mat.loc[query].min()
+		idx = np.where(dist_mat.loc[query].values == phydist)[0]
+		neighbor = dist_mat.columns[idx]
 
 	else:
 		root = [n for n in g if g.in_degree(n) == 0][0]
@@ -83,6 +82,41 @@ def find_phy_neighbors(g, query, K=1, dist_mat = None):
 
 	return neighbor, phydist
 
+def compute_pairwise_edit_dists(g, compare_method=None, meta_item = None, subset=None, verbose=True):
+
+	edit_dist = []
+	root = [n for n in g if g.in_degree(n) == 0][0]
+	n_targets = len([n for n in g][0].get_character_vec())
+
+	if subset:
+		_leaves = subset
+	else:
+		_leaves = [n for n in g if g.out_degree(n) == 0]
+	
+	all_pairs = []
+	pair_names = []
+	for i1 in tqdm(range(len(_leaves)), desc = "Creating pairs to compare"):
+		l1 = _leaves[i1]
+		for i2 in range(i1+1, len(_leaves)):
+			l2 = _leaves[i2]
+
+			if compare_method == 'inter':
+				if meta_item.loc[l1.name] != meta_item.loc[l2.name]:
+					all_pairs.append((l1, l2))
+					pair_names.append((l1.name, l2.name))
+			elif compare_method == "intra":
+				if meta_item.loc[l1.name] == meta_item.loc[l2.name]:
+					all_pairs.append((l1, l2))
+					pair_names.append((l1.name, l2.name))
+
+			else:
+				all_pairs.append((l1, l2))
+				pair_names.append((l1.name, l2.name))
+
+	for p in all_pairs:
+		edit_dist.append(p[0].get_modified_hamming_dist(p[1]))
+
+	return np.array(edit_dist), pair_names 
 
 def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=None, verbose = True):
 
@@ -134,7 +168,7 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=
 		dC = DIST_TO_ROOT[mrca]
 		
 		tree_dist.append(dA + dB - 2*dC)
-		edit_dist.append(n_pair[0].get_edit_distance(n_pair[1]))
+		edit_dist.append(n_pair[0].get_modified_hamming_dist(n_pair[1]))
 		
 	
 	diam = np.max(tree_dist)
