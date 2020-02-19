@@ -24,7 +24,7 @@ import itertools
 from . import sankoff_parsimony
 from . import fitch_parsimony
 
-def compute_transitions(t, meta):
+def compute_transitions(t, meta, count_unique = False):
 
 	root = [n for n in t if t.in_degree(n) == 0][0]
 	t = assign_labels(t, meta)
@@ -44,7 +44,9 @@ def compute_transitions(t, meta):
 
 	L = fitch_parsimony.count_opt_solutions(t, possible_labels, node_to_i, label_to_j)
 
-	C = fitch_parsimony.count_num_transitions(t, L, possible_labels, node_to_i, label_to_j)
+	obs_transitions = defaultdict(list)
+
+	C = fitch_parsimony.count_num_transitions(t, L, possible_labels, node_to_i, label_to_j, count_unique = count_unique)
 
 	count_mat = pd.DataFrame(np.zeros((L.shape[1], L.shape[1])))
 	count_mat.columns = possible_labels
@@ -192,7 +194,7 @@ def shuffle_labels(meta):
 	meta.index = inds
 	return meta
 
-def generate_background(lg, meta, num_threads = 1, num_shuffles = 100):
+def generate_background(lg, meta, num_threads = 1, num_shuffles = 100, count_unique = False):
 
 	rmeta = meta.copy()
 
@@ -205,7 +207,7 @@ def generate_background(lg, meta, num_threads = 1, num_shuffles = 100):
 
 	results = []
 
-	futures = [executor.submit(compute_transitions, lg, rand_meta) for rand_meta in random_metas]
+	futures = [executor.submit(compute_transitions, lg, rand_meta, count_unique) for rand_meta in random_metas]
 	# concurrent.futures.wait(futures)
    
 	for future in tqdm(concurrent.futures.as_completed(futures), total = len(futures)):

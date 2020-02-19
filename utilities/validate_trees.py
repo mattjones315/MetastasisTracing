@@ -82,16 +82,17 @@ def find_phy_neighbors(g, query, K=1, dist_mat = None):
 
 	return neighbor, phydist
 
-def compute_pairwise_edit_dists(g, compare_method=None, meta_item = None, subset=None, verbose=True):
+def compute_pairwise_edit_dists(g, compare_method=None, meta_item = None, nodes=None, verbose=True):
 
 	edit_dist = []
-	root = [n for n in g if g.in_degree(n) == 0][0]
-	n_targets = len([n for n in g][0].get_character_vec())
-
-	if subset:
-		_leaves = subset
+	if nodes is not None:
+		_leaves = nodes
+		n_targets = len(_leaves)
 	else:
+		root = [n for n in g if g.in_degree(n) == 0][0]
 		_leaves = [n for n in g if g.out_degree(n) == 0]
+	
+	n_targets = len(_leaves[0].get_character_vec())
 	
 	all_pairs = []
 	pair_names = []
