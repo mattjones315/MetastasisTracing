@@ -24,6 +24,28 @@ import itertools
 from . import sankoff_parsimony
 from . import fitch_parsimony
 
+def compute_transitions_naive(t, meta):
+
+    root = [n for n in t if t.in_degree(n) == 0][0]
+    t = assign_labels(t, meta)
+    possible_labels = meta.unique()
+
+    t = cmp.set_depth(t, root)
+    t = fitch_parsimony.fitch_bottom_up(t, root)
+
+    label_to_j = dict(zip(possible_labels, range(len(possible_labels))))
+
+    t = fitch_parsimony.reconcile_fitch(t)
+
+    count_mat = fitch_parsimony.draw_one_fitch_solution(t, possible_labels, label_to_j)
+
+    count_mat = pd.DataFrame(count_mat)
+    count_mat.columns = possible_labels
+    count_mat.index = possible_labels
+
+    return count_mat
+
+
 def compute_transitions(t, meta, count_unique = False):
 
 	root = [n for n in t if t.in_degree(n) == 0][0]
@@ -39,6 +61,10 @@ def compute_transitions(t, meta, count_unique = False):
 
 	node_to_i = dict(zip(bfs_postorder, range(len(t.nodes))))
 	label_to_j = dict(zip(possible_labels, range(len(possible_labels))))
+
+	root_labs = t.nodes[root]['label']
+	#if 'LL' not in root_labs:
+	#	t.nodes[root]['label'] = np.concatenate((root_labs, ['LL']))
 
 	t = fitch_parsimony.reconcile_fitch(t)
 

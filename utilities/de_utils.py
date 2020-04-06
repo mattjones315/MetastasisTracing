@@ -57,19 +57,19 @@ def run_lin_reg_ALL_GENES(adata, meta_var):
 	return pvals, betas, corrs
 
 
-def compute_log2fc(gr, bg, gene):
+def compute_log2fc(gr, bg, gene, adata):
 	
-	#g1_filt = adata.obs.apply(lambda x: x[groupby_var] == g, axis=1)
-	#bg_filt = adata.obs.apply(lambda x: x[groupby_var] == bg, axis=1)
+	# g1_filt = adata.obs.apply(lambda x: x[groupby_var] == g, axis=1)
+	# bg_filt = adata.obs.apply(lambda x: x[groupby_var] == bg, axis=1)
 	
 	gene_ii = np.where(adata.raw.var_names == gene)[0][0]
 	
-	exp_g = np.mean(gr.X[:,gene_ii]) + 1e-7
-	exp_bg = np.mean(bg.X[:,gene_ii]) + 1e-7
+	exp_g = np.mean(gr[:,gene_ii]) + 0.01
+	exp_bg = np.mean(bg[:,gene_ii]) + 0.01
 	
 	return np.log2(exp_g / exp_bg)
 
-def create_DE_df(counts, groupby_var, gr, bg, result):
+def create_DE_df(counts, groupby_var, gr, bg, result, method='ttest'):
 	
 	g_filt = counts.obs.apply(lambda x: x[groupby_var] ==  gr, axis=1).values
 	bg_filt = counts.obs.apply(lambda x: x[groupby_var] == bg, axis=1).values
@@ -80,10 +80,22 @@ def create_DE_df(counts, groupby_var, gr, bg, result):
 	
 	log2fc = {}
 	adj_pvalues = {}
+	scores = {}
+
+	if method == 'logreg':
+		for gene, score in zip(result['names'][gr], result['scores'][gr]):
+			scores[gene] = score
+			log2fc[gene] = compute_log2fc(gdata, bgdata, gene, counts)
+		
+		de_df = pd.DataFrame.from_dict(scores, orient='index', columns=['scores'])
+		de_df['gene'] = de_df.index
+		de_df['log2fc'] = de_df.index.map(log2fc)
+		de_df.index = range(de_df.shape[0])
+		return de_df
 	
 	for gene, qval, fc in zip(result['names'][gr], result['pvals_adj'][gr], result['logfoldchanges'][gr]):
 		#scores[gene] = score
-		#log2fc[gene] = compute_log2fc(gdata, bgdata, gene)
+		#log2fc[gene] = compute_log2fc(gdata, bgdata, gene, counts)
 		
 		adj_pvalues[gene] = qval
 		log2fc[gene] = fc

@@ -58,7 +58,33 @@ def count_opt_solutions(T, possible_assignments, node_to_i, label_to_j):
 
     return L
 
+def draw_one_fitch_solution(T, possible_labels, label_to_j):
 
+    M = len(possible_labels)
+    C = np.zeros((M, M))
+    root = [n for n in T if T.in_degree(n) == 0][0]
+
+    # draw a random, legal assignment and label each node 
+    for n in nx.dfs_postorder_nodes(T, source=root):
+        T.nodes[n]['label'] = np.random.choice(T.nodes[n]['label'])
+    
+    # now count transitions
+    for v in nx.dfs_postorder_nodes(T, source=root):
+
+        v_lab = T.nodes[v]['label']
+        i = label_to_j[v_lab]
+
+        children = list(T.successors(v))
+        for c in children:
+            
+            c_lab = T.nodes[c]['label']
+            j = label_to_j[c_lab]
+
+            C[i, j] += 1
+
+    return C
+            
+            
 def count_num_transitions(
     T, L, possible_labels, node_to_i, label_to_j, count_unique=False
 ):

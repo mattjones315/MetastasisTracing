@@ -160,6 +160,8 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=
 
 	if verbose:
 		print("Computing pairwise distances...")
+
+	ug = g.to_undirected()
 	for _lca in lcas:
 		
 		n_pair, mrca = _lca[0], _lca[1]
@@ -179,7 +181,7 @@ def compute_pairwise_dist_nx(g, compare_method = None, meta_item = None, subset=
 
 def compute_RNA_corr(counts, cells, _method = "euclidean"):
 	
-	entries = counts.loc[cells]
+	entries = counts.loc[cells].values
 	
 	if _method == "frobenius":
 
@@ -201,7 +203,6 @@ def compute_RNA_corr(counts, cells, _method = "euclidean"):
 
 
 if __name__ == "__main__":
-
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument('tree', help = 'Tree to process. This should be a processed Cassiopeia_Tree object, saved as a pickle')
