@@ -60,7 +60,7 @@ ggplot(genes, aes(log2fc, betas, label=gene)) + geom_point(data = subset(genes, 
 #  xlim(-2.5, 2.5) +
 #  theme_classic() + theme(text=element_text(size=16,  family="Comic Sans MS"))
 
-ggsave("poisson_de.lg.eps")
+ggsave("poisson_de.5k.eps")
 
 # ggplot(genes, aes(log2fc, log10_qval, label=gene)) + geom_point() + 
 #   geom_hline(yintercept = -log10(0.05), color="red", linetype = "dotted") + 

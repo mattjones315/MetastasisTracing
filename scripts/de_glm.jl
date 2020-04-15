@@ -1,3 +1,4 @@
+
 using MatrixMarket;
 using GLM;
 using DataFrames;
@@ -58,7 +59,7 @@ count_nnz(x) = count(i -> (i>0), x)
 println("reading in data")
 
 path10x = "/data/yosef2/users/mattjones/projects/metastasis/JQ19/5k/RNA/ALL_Samples/GRCh38/";
-meta_fp = "/data/yosef2/users/mattjones/projects/metastasis/JQ19/5k/RNA/LG_meta.txt"
+meta_fp = "/data/yosef2/users/mattjones/projects/metastasis/JQ19/5k/RNA/LG_meta_fixed.txt"
 # meta_fp = "/data/yosef2/users/mattjones/projects/metastasis/JQ19/5k/RNA/LG_meta.shuffled.txt"; # let's look at shuffled controls 
 expr = Array(read_csc(string(path10x, "matrix.mtx")));
 barcodes = read_barcodes(string(path10x, "barcodes.tsv"));
@@ -83,7 +84,7 @@ meta_data = meta_data[completecases(meta_data),:];
 # only predict on top and bot percentiles
 # top_perc = 0.21;
 # bot_perc = 0.004; 
-# meta_data = filter(row->((row.DynamicMetScore >= top_perc) | (row.DynamicMetScore <= bot_perc)), meta_data);
+# meta_data = filter(row->((row.scTreeMetRate >= top_perc) | (row.scTreeMetRate <= bot_perc)), meta_data);
 
 keep_cells = intersect(meta_data.cellBC, barcodes);
 meta_filtered = filter(row->row.cellBC in keep_cells, meta_data);
@@ -109,11 +110,11 @@ expr_filt = expr[keep_ii,:];
 expr_norm_filt = expr_norm[keep_ii,:];
 
 # center dynamic met DynamicMetScore
-mu = mean(meta_filtered.DynamicMetScore);
-meta_filtered.DynamicMetScore = [(i - mu) for i in meta_filtered.DynamicMetScore];
+mu = mean(meta_filtered.scTreeMetRate);
+meta_filtered.scTreeMetRate = [(i - mu) for i in meta_filtered.scTreeMetRate];
 
 refactor_met_score(x) = ifelse(x >= 0, 1, 0);
-y = [refactor_met_score(i) for i in meta_filtered.DynamicMetScore];
+y = [refactor_met_score(i) for i in meta_filtered.scTreeMetRate];
 lineage_group = [string(i) for i in meta_filtered.LineageGroup];
 
 cell_counts = [i for i in size_factors];
@@ -165,4 +166,4 @@ for i in 1:size(X)[2]
 end 
 
 res_df = DataFrame(genes = genes_tested, betas = betas, pvalues = pvalues, test=test_type, log2fc = fold_changes);
-CSV.write(open("/data/yosef2/users/mattjones/projects/metastasis/JQ19/5k/trees/lg7/poisson_reg_de.LG.txt", "w"), res_df, delim = "\t");
+CSV.write(open("/data/yosef2/users/mattjones/projects/metastasis/JQ19/5k/RNA/ALL_Samples/poisson_reg_de.ALL_fixed.txt", "w"), res_df, delim = "\t");

@@ -12,8 +12,8 @@ import os
 from cassiopeia.TreeSolver.simulation_tools import dataset_generation as data_gen
 
 import utilities.metastasis_score_utils as met_utils
-import utilities.compute_transition_probs as ctp
 import cassiopeia.TreeSolver.compute_meta_purity as cmp
+from cassiopeia.Anlaysis import reconstruct_states, small_parsimony
 
 
 def assign_majority_vote(t, root):
@@ -47,7 +47,7 @@ def compute_transitions_majority_vote(t, meta):
     label_to_j = dict(zip(possible_labels, range(len(possible_labels))))
     
     root = [n for n in t if t.in_degree(n) == 0][0]
-    t = ctp.assign_labels(t, meta)
+    t = small_parsimony.assign_labels(t, meta)
     
     t = cmp.set_depth(t, root)
     
@@ -184,8 +184,8 @@ for j in tqdm(range(N_clones)):
         t2 = t.copy() 
         
         # meta = pd.DataFrame.from_dict(dict(zip([n.name for n in leaves], [tree.network.nodes[n]['meta'] for n in leaves])), orient='index')
-        est_freqs_naive = ctp.compute_transitions_naive(t2, meta.loc[:,'sample'])
-        est_freqs = ctp.compute_transitions(t, meta.loc[:,'sample'], count_unique = False)
+        est_freqs_naive = reconstruct_states.naive_fitch(t2, meta.loc[:,'sample'])
+        est_freqs = reconstruct_states.fitch_count(t, meta.loc[:,'sample'], count_unique = False)
         est_freqs_mv = compute_transitions_majority_vote(t, meta.iloc[:, 0])
 
 
@@ -262,4 +262,4 @@ for j in tqdm(range(N_clones)):
         print('here')
         continue
 
-masterDF.to_csv("fitcher_benchmark.uniform.txt", sep='\t')
+# masterDF.to_csv("fitcher_benchmark.uniform.txt", sep='\t')

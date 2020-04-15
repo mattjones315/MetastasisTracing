@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from . import fitch_parsimony
+from cassiopeia.Analysis import small_parsimony
 import scipy.stats as scs
 from . import validate_trees as tree_val
 from tqdm import tqdm
@@ -142,10 +142,10 @@ def compute_dynamic_metastasis_score(tree, meta):
         The dynamic metastatic score -- i.e. the normalized parsimony with respect to the meta variable specified. 
     """
 
-    tree = fitch_parsimony.assign_labels(tree, meta)
-    tree = fitch_parsimony.fitch(tree)
+    tree = small_parsimony.assign_labels(tree, meta)
+    tree = small_parsimony.fitch_hartigan(tree)
 
-    score = fitch_parsimony.score_parsimony(tree)
+    score = small_parsimony.score_parsimony(tree)
 
     return score / len(list(tree.edges()))
 
