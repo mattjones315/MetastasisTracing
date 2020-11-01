@@ -14,3 +14,8 @@ Each notebook corresponds to a module in our analysis:
 	
 * `Metastasis_Simulator.ipynb`: simulate metastasis over various tissues and extract out tissue distributions and observed metastatic events.
 * `Score_Metastasis.ipynb`: filter out clones & score metastatic ability.
+* `RNA_Analysis.ipynb`: evaluate to what extent metastatic scores derived from the trees are related to transcriptional state
+* `run_hotspot.ipynb`: run _Hotspot_ analysis to find modules that evolve on the tree
+* `infer_transition_matrices.ipynb`: run _FitchCount_ to infer metastatic architectures of the clones
+* `analyze_gene_overlap.ipybn`: analyze and plot gene set overlap between mice
+* `Day0_analysis.ipynb`: analyze pre-implantation cells and evaluate heritability of metastatic capacity.
